@@ -7,7 +7,7 @@ while True:
     user_input = input("Enter your equation > ")
     tokens = user_input.split(" ")
 
-    if "q" in tokens:
+    if tokens == "q" or tokens == "quit":
         print("You will exit.")
         break
 
@@ -63,11 +63,11 @@ while True:
     elif operator == "mod":
         result = mod(float(num1), float(num2))
 
-   # elif operator == "x+":
-    #    result = add_mult(float(num1), float(num2), float(num3))
+    elif operator == "x+":
+        result = add_mult(float(num1), float(num2), float(num3))
 
-    #elif operator == "cubes+":
-     #   result = add_cubes(float(num1), float(num2))
+    elif operator == "cubes+":
+        result = add_cubes(float(num1), float(num2))
 
     else:
         result = "Please enter an operator followed by two integers."
