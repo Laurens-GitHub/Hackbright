@@ -14,7 +14,7 @@
 # for each word in line, add the key into the dictionary
 # at a value of 1
 
-# if the word is found again, increment the value for the 
+# if the word is found again, increment the value for the
 #corresponding key
 
 #bonus: account for commas and periods
@@ -23,9 +23,16 @@
 
 #define the function
 
+#use sys.argv to pass in a file
+#import sys
+
 def word_count(input_file):
     #open the input file
     input_file = open(input_file)
+
+    #using sys.argv:
+    #input_file = sys.argv[1]
+
     #create an empty dictionary
     word_dic = {}
 
