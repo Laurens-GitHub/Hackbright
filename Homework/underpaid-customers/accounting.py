@@ -1,61 +1,100 @@
 melon_cost = 1.00
 
-customer1_name = "Joe"
-customer1_melons = 5
-customer1_paid = 5.00
+# customer1_name = "Joe"
+# customer1_melons = 5
+# customer1_paid = 5.00
 
-customer2_name = "Frank"
-customer2_melons = 6
-customer2_paid = 6.00
+# customer2_name = "Frank"
+# customer2_melons = 6
+# customer2_paid = 6.00
 
-customer3_name = "Sally"
-customer3_melons = 3
-customer3_paid = 3.00
+# customer3_name = "Sally"
+# customer3_melons = 3
+# customer3_paid = 3.00
 
-customer4_name = "Sean"
-customer4_melons = 9
-customer4_paid = 9.50
+# customer4_name = "Sean"
+# customer4_melons = 9
+# customer4_paid = 9.50
 
-customer5_name = "David"
-customer5_melons = 4
-customer5_paid = 4.00
+# customer5_name = "David"
+# customer5_melons = 4
+# customer5_paid = 4.00
 
-customer6_name = "Ashley"
-customer6_melons = 3
-customer6_paid = 2.00
+# customer6_name = "Ashley"
+# customer6_melons = 3
+# customer6_paid = 2.00
 
-customer1_expected = customer1_melons * melon_cost
-if customer1_expected != customer1_paid:
-    print(f"{customer1_name} paid ${customer1_paid:.2f},",
-          f"expected ${customer1_expected:.2f}"
-          )
+# customer1_expected = customer1_melons * melon_cost
+# if customer1_expected != customer1_paid:
+#     print(f"{customer1_name} paid ${customer1_paid:.2f},",
+#           f"expected ${customer1_expected:.2f}"
+#           )
 
-customer2_expected = customer2_melons * melon_cost
-if customer2_expected != customer2_paid:
-    print(f"{customer2_name} paid ${customer2_paid:.2f},",
-          f"expected ${customer2_expected:.2f}"
-          )
+# customer2_expected = customer2_melons * melon_cost
+# if customer2_expected != customer2_paid:
+#     print(f"{customer2_name} paid ${customer2_paid:.2f},",
+#           f"expected ${customer2_expected:.2f}"
+#           )
 
-customer3_expected = customer3_melons * melon_cost
-if customer3_expected != customer3_paid:
-    print(f"{customer3_name} paid ${customer3_paid:.2f},",
-          f"expected ${customer3_expected:.2f}"
-          )
+# customer3_expected = customer3_melons * melon_cost
+# if customer3_expected != customer3_paid:
+#     print(f"{customer3_name} paid ${customer3_paid:.2f},",
+#           f"expected ${customer3_expected:.2f}"
+#           )
 
-customer4_expected = customer4_melons * melon_cost
-if customer4_expected != customer4_paid:
-    print(f"{customer4_name} paid ${customer4_paid:.2f},",
-          f"expected ${customer4_expected:.2f}"
-          )
+# customer4_expected = customer4_melons * melon_cost
+# if customer4_expected != customer4_paid:
+#     print(f"{customer4_name} paid ${customer4_paid:.2f},",
+#           f"expected ${customer4_expected:.2f}"
+#           )
 
-customer5_expected = customer5_melons * melon_cost
-if customer5_expected != customer5_paid:
-    print(f"{customer5_name} paid ${customer5_paid:.2f},",
-          f"expected ${customer5_expected:.2f}"
-          )
+# customer5_expected = customer5_melons * melon_cost
+# if customer5_expected != customer5_paid:
+#     print(f"{customer5_name} paid ${customer5_paid:.2f},",
+#           f"expected ${customer5_expected:.2f}"
+#           )
 
-customer6_expected = customer6_melons * melon_cost
-if customer6_expected != customer6_paid:
-    print(f"{customer6_name} paid ${customer6_paid:.2f},",
-          f"expected ${customer6_expected:.2f}"
-          )
+# customer6_expected = customer6_melons * melon_cost
+# if customer6_expected != customer6_paid:
+#     print(f"{customer6_name} paid ${customer6_paid:.2f},",
+#           f"expected ${customer6_expected:.2f}"
+#           )
+
+data_file = open('customer-orders.txt')
+"""Return a description of all accounts, determine underpaid accounts"""
+
+def accounts(data_file):
+    settled = 0
+    overpaid = 0
+    underpaid = 0
+    
+    for line in data_file:
+        line = line.rstrip()
+        data = line.split('|')
+        customer = data[1]
+        melons = float(data[2])
+        expected = float(melons*melon_cost)
+        paid = float(data[-1])
+
+
+        if paid == expected:
+
+            print(f"{customer}'s account is settled")
+            settled = settled + 1
+
+        elif paid > expected:
+
+            print(f"{customer} has overpaid by {(paid)-(expected)}.")
+            overpaid = overpaid + 1
+
+        else:
+
+            print(f"{customer} has underpaid by {(expected)-(paid)}.")
+            underpaid = underpaid + 1
+        
+    
+    print(f'There are {overpaid} overpaid accounts.')
+    print(f'There are {underpaid} underpaid accounts.')
+    print(f'There are {settled} settled accounts.')
+
+accounts(data_file)
