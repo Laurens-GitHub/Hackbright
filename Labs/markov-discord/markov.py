@@ -80,9 +80,6 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-#    TODO: replace this with your code
-    if message.content.startswith('$hello'):
-        await message.channel.send(markov.py)
+    await message.channel.send(make_text(chains))
 
-get_secrets = secrets.sh
-client.run(get_secrets)
+client.run(os.environ['DISCORD_TOKEN'])
