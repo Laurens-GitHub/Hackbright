@@ -82,50 +82,89 @@
 # Since we know all animals will have a species and a greeting,
 # Here is a simpler way to code the above:
 
-class BaseAnimal:
-    greeting = 'Hey!'
-    species = None
+# class BaseAnimal:
+#     greeting = 'Hey!'
+#     species = None
 
-    def __init__(self, name):
+#     def __init__(self, name):
+#         self.name = name
+
+#     def speak(self):
+#         print(f"{self.greeting}, I'm {self.name} the {self.species}")
+
+
+# # class Cat(BaseAnimal):
+# #     greeting = 'Meow'
+# #     species = 'cat'
+
+
+# # class Dog(BaseAnimal):
+# #     greeting = 'Woof'
+# #     species = 'dog'
+
+# # notice that we do not need separate __init__ for the subclasses
+# # because they use the they use the one in the superclass
+
+
+# # If we want to supply a feature to a subclass without chasing the base
+# # class (Animal), we can use a mixin:
+
+# class ChaseLaserMixin:
+#     """Can chase laser pointers."""
+
+#     def chase_laser(self):
+#         print('Wheee!')
+
+
+# class HasFurMixin:
+#     """Has fur."""
+
+#     def enfur(self):
+#         print('Fur everywhere!!')
+
+# class Cat(ChaseLaserMixin, HasFurMixin, BaseAnimal):
+#     greeting = 'Meow'
+#     species = 'cat'
+
+# class Dog(HasFurMixin, BaseAnimal):
+#     greeting = 'Woof'
+#     species = 'dog'
+
+'''Classes 4'''
+
+class Cat:
+    greeting = 'Meow'
+    species = 'cat'
+    def __init__(self, name, hunger = 100):
         self.name = name
+        self.hunger = hunger
 
     def speak(self):
         print(f"{self.greeting}, I'm {self.name} the {self.species}")
 
+    def feed(self, calories):
+        self.hunger = self.hunger - calories
 
-# class Cat(BaseAnimal):
-#     greeting = 'Meow'
-#     species = 'cat'
+    # def cat_food_to_calories(self, food_amt):
+    #     """Convert an amount of cat food to calories"""
+    #     return food_amt * 0.3456
 
+# '''
+# What if we want to convert cat food to calories without instantiating a cat first?
+# We can make this a static method:
+# '''
 
-# class Dog(BaseAnimal):
-#     greeting = 'Woof'
-#     species = 'dog'
+    @staticmethod
+    def cat_food_to_calories(food_amt):
+        """Convert an amount of cat food to calories"""
+        return food_amt * 0.3456
 
-# notice that we do not need separate __init__ for the subclasses
-# because they use the they use the one in the superclass
+# Notice that we no longer need "self" because this is no longer an instance method.
 
+    @classmethod
+    def from_file(cls, name):
+        for line in open(cls._data_file):
+            data_name, data_hunger = line.strip().split(',')
 
-# If we want to supply a feature to a subclass without chasing the base
-# class (Animal), we can use a mixin:
-
-class ChaseLaserMixin:
-    """Can chase laser pointers."""
-
-    def chase_laser(self):
-        print('Wheee!')
-
-
-class HasFurMixin:
-    """Has fur."""
-
-    def enfur(self):
-        print('Fur everywhere!!')
-
-class Cat(ChaseLaserMixin, HasFurMixin, BaseAnimal):
-    greeting = 'Meow'
-    species = 'cat'
-
-class Dog(HasFurMixin, BaseAnimal):
-    greeting = 'Woof'
-    species = 'dog'
+            if data_name == name:
+                return cls(data_name, float(data_hunger))
