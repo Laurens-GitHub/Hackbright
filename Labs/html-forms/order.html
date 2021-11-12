@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+    <section>
+        <!--This is the "Order a Melongram!" section-->
+        <header>
+        <head>
+            <title>Order a Melongram!</title>
+        </head>
+        </header>
+        <body>
+            <h1>Order a Melongram</h1>
+
+            <p>There's no better way to show a loved one you care than with a Melongram.
+            </p>
+            <p>Each Melongram comes with a custom message printed on high-quality cardstock and your choice of a hand-picked, premium melon.
+            </p>
+    </section>
+
+        <section>
+                <header>
+                    <h2>Melon Options</h2>
+                </header>
+                <p>Choose from one of these melons:</p>
+
+                <table>
+                    <tr>
+                        <td>Watermelon</td><td>$1,200.00</td>
+                    </tr>
+                    <tr>
+                        <td>Canteloupe</td><td>$400.00</td>
+                    </tr>
+                    <tr>
+                        <td>Honeydew</td><td>$1,750,000.00</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <!--This is the Order Form section-->
+                <header>
+                    <h2>Order Form</h2>
+                </header>
+                <form>
+                    <p>
+                        <label for="name">Your name</label><br>
+                        <input type="text" name="name" id="name">
+                    </p>
+                    <p>
+                        <label for="recipient">Who are we sending this to?</label><br>
+                        <input type="text" name="recipient" id="recipient">
+                    </p>
+                    <p>Choose a melon</p>
+                    <select name="melon">
+                        <option value="watermelon">Watermelon
+                        </option>
+                        <option value="cantaloupe">Cantaloupe
+                        </option>
+                        <option value="honeydew">Honeydew
+                        </option>
+                    </select>
+
+                    <p><fieldset>
+                        <legend>When should we deliver?</legend>
+                        <input type="radio" name="time" value="am" id="morning">
+                        <label for="morning">Morning</label>
+                        <input type="radio" name="time" value="pm" id="evening">
+                        <label for="evening">Evening</label>
+                        <input type="radio" name="time" value="any" id="any_time">
+                        <label for="any_time">Any time</label>
+                    </fieldset></p>
+
+                    <p>Enter your message:</p>
+                    <textarea name="message">
+                    </textarea>
+                    <p>Subscribe to our newsletter</p>
+                    <input type="checkbox" name="subscribe" value="yes" id="subscribe">
+                    <label for="subscribe">Yes</label><br>
+                    <button type="submit">Submit</button>
+                </form>
+        </section>
+    </body>
+</html>
