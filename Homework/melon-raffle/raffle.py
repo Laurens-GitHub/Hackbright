@@ -1,5 +1,6 @@
 """Read customer data from file and run a raffle."""
 
+import random
 from random import choice
 
 
