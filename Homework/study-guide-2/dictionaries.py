@@ -91,7 +91,7 @@ def find_unique_common_items(items1, items2):
             if item == thing:
                 result.append(item)
 
-    return result
+    return set(result)
 
 
 def get_sum_zero_pairs(numbers):
@@ -148,6 +148,17 @@ def top_chars(phrase):
     Do not count spaces, but count all other characters.
 
     """
+
+    max_count = 0
+    for char in phrase:
+        current_count = 0
+        current_char = phrase[char]
+        if char == current_char:
+            current_count += 1
+            print(current_count)
+        if current_count > max_count:
+            max_count == current_count
+            print(max_count)
 
     return []
 
