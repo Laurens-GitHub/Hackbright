@@ -19,7 +19,7 @@ const catPhoto = document.querySelector('img');
 
 catPhoto.getAttribute('src'); // => 'cat.jpg'
 
-// catPhoto.setAttribute('src', 'cat2.gif');
+//catPhoto.setAttribute('src', 'cat2.gif');
 
 // document.querySelector('#main-content').classList.add('fancy');
 
