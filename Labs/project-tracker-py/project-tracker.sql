@@ -169,6 +169,8 @@ COPY public.projects (id, title, description, max_grade) FROM stdin;
 1	Markov	Tweets generated from Markov chains	50
 2	Blockly	Programmatic Logic Puzzle Game	10
 5	Wits and Wagers	Bidding Game	150
+6	BigData	Prints data	100
+7	BlahBrick	{Counts,bricks,in,a,photo}	77
 \.
 
 
@@ -194,7 +196,7 @@ SELECT pg_catalog.setval('public.grades_id_seq', 7, true);
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: hackbright
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 5, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 40, true);
 
 
 --

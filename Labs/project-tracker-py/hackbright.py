@@ -109,6 +109,46 @@ def assign_grade(github, title, grade):
 
     print(f"Successfully added grade of {grade} for {title}")
 
+# FURTHER STUDY
+def make_new_project(title, description, grade):
+
+    """Add a new project and print confirmation.
+
+    Given a title, description, and maximum grade, add project to the
+    database and print a confirmation message.
+    """
+
+    QUERY = """
+        INSERT INTO projects (title, description, max_grade)
+        VALUES (:title, :description, :max_grade)
+        """
+
+    db_cursor = db.session.execute(QUERY, {'title': title,
+    'description': description,
+    'max_grade': grade})
+
+    db.session.commit()
+
+
+    print(f"Successfully added project {title} with a max grade of {grade}")
+
+def get_grade_for_student(github):
+    """Given a student, Print all grades received for all projects."""
+
+    QUERY = """
+        SELECT student_github, project_title, grade
+        FROM grades
+        WHERE student_github = :student_github
+        """
+
+    db_cursor = db.session.execute(QUERY,{'student_github': github})
+
+    rows = db_cursor.fetchall()
+
+    print(f"Student: {github}")
+    for row in rows:
+        print(f"Project Title: {row[1]}, grade received: {row[2]}")
+
 
 def handle_input():
     """Main loop.
@@ -144,6 +184,16 @@ def handle_input():
         elif command == "new_grade":
             github, title, grade = args
             assign_grade(github, title, grade)
+
+        elif command == "new_project":
+            title = args[0]
+            description = args[1:-1]
+            grade = args[-1]
+            make_new_project(title, description, grade)
+
+        elif command == "get_student_grades":
+            github = args[0]
+            get_grade_for_student(github)
 
         else:
             if command != "quit":
