@@ -1,0 +1,45 @@
+Here is the solution
+
+Hackbright Engineering
+
+Solution
+Find the user with the email cats@gmail.com.
+
+user = User.query.filter_by(email='cats@gmail.com').one()
+or
+
+user = db.session.query(User).filter(User.email == "cats@gmail.com").one()
+Find any movies with the exact title “Cape Fear.”
+
+movies = Movie.query.filter_by(title='Cape Fear').all()
+or
+
+movies = db.session.query(Movie).filter(Movie.title == "Cape Fear").all()
+Find all users with the zipcode 90703.
+
+users = User.query.filter_by(zipcode='90703').all()
+or
+
+users = db.session.query(User).filter(User.zipcode == "90703").all()
+Find all ratings of with the score of 5.
+
+ratings_of_five = Rating.query.filter_by(score=5).all()
+or
+
+ratings_of_five = db.session.query(Rating).filter(Rating.score == 5).all()
+Find the rating for the movie whose id is 7, from the user whose id is 6.
+
+rating = Rating.query.filter_by(user_id=6, movie_id=7).first()
+or
+
+rating = db.session.query(Rating).filter(Rating.user_id == 6,
+                                          Rating.movie_id == 7).first()
+Find all ratings that are larger than 3.
+
+ratings = Rating.query.filter(Rating.score > 3).all()
+or
+
+ratings = db.session.query(Rating).filter(Rating.score > 3).all()
+Note that for this one, since we’re testing for something other than equality, we have to use .filter() (rather than .filter_by()), which also means we need to include the classname in our filtering expression (Rating.score rather than just score).
+
+© 2021 Hackbright Academy
