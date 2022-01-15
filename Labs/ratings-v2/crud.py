@@ -24,7 +24,7 @@ def get_users():
     return User.query.all()
 
 def get_user_by_id(user_id):
-    """Return a user by their user id."""
+    """Return a id and email by their user id."""
 
     return User.query.get(user_id)
 

@@ -54,27 +54,31 @@ def register_user():
 
     return redirect("/")
 
-@app.route("/users", methods=["POST"])
-def login_user(user_id):
+@app.route("/login", methods=["POST"])
+def login_user():
     """Log in a returning user."""
 
     # get the user's entered email and password from the form
-    email = request.form.get("email")
-    password = request.form.get("password")
+    email = request.form.get("login-email")
+    password = request.form.get("login-pass")
 
     #Query the database for the entered email, and get the associated password
     user_pass = crud.get_user_by_password(email)
+
     #If the password in the form matches the queried password, log the user in
     if password == user_pass:
-        name = crud.get_user_by_id(user_id)
-        session['user_id'] = user_id
+        session_id = crud.get_user_by_id(user_id)
+        session['user_id'] = session_id
+
     #Flash a logged in message and redirect to the homepage
         flash("Log In Successful!")
         return redirect("/")
+        print('A redirect was attempted')
 
     #Otherwise, flash a message that the account information is incorrect
     else:
         flash("The account information is incorrect")
+        print('The info was incorrect')
 
 
 @app.route("/users")
