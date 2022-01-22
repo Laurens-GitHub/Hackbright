@@ -30,17 +30,24 @@ def show_afterparty_form():
 def find_afterparties():
     """Search for afterparties on Eventbrite"""
 
-    url = "https://yfapi.net/v6/finance/quote"
+    keyword = request.args.get('keyword', '')
+    postalcode = request.args.get('zipcode', '')
+    radius = request.args.get('radius', '')
+    unit = request.args.get('unit', '')
+    sort = request.args.get('sort', '')
 
-    querystring = {"symbols":"AAPL,BTC-USD,EURUSD=X"}
+    url = 'https://yfapi.net'
+    payload = {'apikey': API_KEY,
+               'keyword': keyword,
+               'postalCode': postalcode,
+               'radius': radius,
+               'unit': unit,
+               'sort': sort}
 
-    headers = {
-        'x-api-key': YAHOO_KEY
-        }
+    response = requests.get(url, params=payload)
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
-
-    print(response.text)
+    data = response.json()
+    events = data['_embedded']['events']
 
     return render_template('search-results.html',
                            pformat=pformat,
