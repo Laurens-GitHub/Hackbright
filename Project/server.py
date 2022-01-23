@@ -7,62 +7,67 @@ import requests
 
 app = Flask(__name__)
 app.secret_key = 'SECRETSECRETSECRET'
-
+#remove in production
+app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
 
 API_KEY = os.environ['YAHOO_KEY']
 
 
+# @app.route('/')
+# def homepage():
+#     """Show homepage."""
+
+#     return render_template('homepage.html')
+
+
+# @app.route('/afterparty')
+# def show_afterparty_form():
+#     """Show event search form"""
+
+#     return render_template('search-form.html')
+
+
 @app.route('/')
-def homepage():
-    """Show homepage."""
-
-    return render_template('homepage.html')
-
-
-@app.route('/afterparty')
-def show_afterparty_form():
-    """Show event search form"""
-
-    return render_template('search-form.html')
-
-
-@app.route('/afterparty/search')
-def find_afterparties():
+def show_stock_data():
     """Search for afterparties on Eventbrite"""
 
-    url = "https://yfapi.net/v6/finance/quote"
+    # url = "https://yfapi.net/v6/finance/quote"
+    #querystring = {"symbols":"AAPL"}
 
-    querystring = {"symbols":"AAPL,BTC-USD,EURUSD=X"}
+    url = "https://yfapi.net/v1/finance/trending/US"
+    querystring = {"region":"US"}
 
-    headers = {
-        'x-api-key': YAHOO_KEY
-        }
+    headers = {'X-API-KEY': API_KEY}
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
+    data = requests.request("GET", url, headers=headers, params=querystring)
+    # data = requests.request("GET", url, headers=headers, params=querystring)
+    json_data = data.json()
+    # AAPL_quote = json_data['quoteResponse']['result'][0]
+    # ticker = json_data['quoteResponse']['result'][0]['symbol']
+    # stocks = data[symbol]
+    #print(data.text)
 
-    print(response.text)
-
-    return render_template('search-results.html',
+    return render_template('base.html',
                            pformat=pformat,
-                           data=data,
-                           results=events)
+                           data=json_data
+                           )
 
 
-@app.route('/event/<id>')
-def get_event_details(id):
-    """View the details of an event."""
+# @app.route('/event/<id>')
+# def get_event_details(id):
+#     """View the details of an event."""
 
-    url = f'https://app.ticketmaster.com/discovery/v2/events/{id}'
-    payload = {'apikey': API_KEY}
+#     url = f'https://app.ticketmaster.com/discovery/v2/events/{id}'
+#     payload = {'apikey': API_KEY}
 
-    response = requests.get(url, params=payload)
+#     response = requests.get(url, params=payload)
 
-    event = response.json()
-    venues = event['_embedded']['venues']
+#     event = response.json()
+#     venues = event['_embedded']['venues']
 
-    return render_template('event-details.html',
-                           event=event,
-                           venues=venues)
+#     return render_template('event-details.html',
+#                            event=event,
+#                            venues=venues)
 
 
 if __name__ == '__main__':
