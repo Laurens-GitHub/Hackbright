@@ -1,7 +1,7 @@
 """Models for stock viewing app."""
 
-from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -32,7 +32,7 @@ class Stock(db.Model):
 
     stock_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     symbol = db.Column(db.String, unique=True)
-    Company = db.Column(db.String)
+    company = db.Column(db.String)
 
 
     def __repr__(self):
@@ -47,6 +47,7 @@ class User_stock(db.Model):
     user_stock_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     stock_id = db.Column(db.Integer, db.ForeignKey("stocks.stock_id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    date_saved = db.Column(db.DateTime)
 
     stock = db.relationship("Stock", backref="user_stocks")
     user = db.relationship("User", backref="user_stocks")
