@@ -1,4 +1,4 @@
-"""Models for movie ratings app."""
+"""Models for stock viewing app."""
 
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -10,52 +10,52 @@ class User(db.Model):
     """A user."""
 
     __tablename__ = "users"
+    # users is a list of User objects
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
 
-    # ratings = a list of Rating objects
 
     def __repr__(self):
-        return f"<User user_id={self.user_id} email={self.email}>"
+        return f"""<User id={self.user_id} first name={self.first_name}
+        last name={self.last_name} email={self.email}>"""
 
 
-class Movie(db.Model):
-    """A movie."""
+class Stock(db.Model):
+    """A stock."""
 
-    __tablename__ = "movies"
+    __tablename__ = "stocks"
+    # stocks is a list of Stock objects
 
-    movie_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    title = db.Column(db.String)
-    overview = db.Column(db.Text)
-    release_date = db.Column(db.DateTime)
-    poster_path = db.Column(db.String)
+    stock_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    symbol = db.Column(db.String, unique=True)
+    Company = db.Column(db.String)
 
-    # ratings = a list of Rating objects
 
     def __repr__(self):
-        return f"<Movie movie_id={self.movie_id} title={self.title}>"
+        return f"<Stock id={self.stock_id} symbol={self.symbol}>"
 
 
-class Rating(db.Model):
-    """A movie rating."""
+class User_stock(db.Model):
+    """A stock saved by a user."""
 
-    __tablename__ = "ratings"
+    __tablename__ = "user_stocks"
 
-    rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    score = db.Column(db.Integer)
-    movie_id = db.Column(db.Integer, db.ForeignKey("movies.movie_id"))
+    user_stock_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    stock_id = db.Column(db.Integer, db.ForeignKey("stocks.stock_id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
 
-    movie = db.relationship("Movie", backref="ratings")
-    user = db.relationship("User", backref="ratings")
+    stock = db.relationship("Stock", backref="user_stocks")
+    user = db.relationship("User", backref="user_stocks")
 
     def __repr__(self):
-        return f"<Rating rating_id={self.rating_id} score={self.score}>"
+        return f"<User stock id={self.user_stock_id} user={self.user_id}>"
 
 
-def connect_to_db(flask_app, db_uri="postgresql:///ratings", echo=True):
+def connect_to_db(flask_app, db_uri="postgresql:///market", echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
