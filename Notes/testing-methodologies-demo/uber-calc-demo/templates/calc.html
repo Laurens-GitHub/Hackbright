@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>UberCalc</title>
+    <link href="/static/calc.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>UberCalc</h1>
+
+        <p class="lead">Pushing math to infinity.</p>
+      </div>
+
+      <form id="calc-form">
+        <input type="text" size="2" name="x" id="x-field" />
+        &plus;
+        <input type="text" size="2" name="y" id="y-field" />
+        =
+        <span id="result">&nbsp;</span>
+        <input type="submit" id="calc-button" class="btn btn-primary input-sm" />
+      </form>
+      <footer>Copyright &copy; 2021 by Ubermelon Math Division.</footer>
+    </div>
+
+    <script src="/static/calc.js"></script>
+
+<!-- "g" is an object that stores configurations. Notice that we import it at the
+top of server.py, and define it on line 9 -->
+    {% if g.jasmine_tests %}
+    <!-- stuff for testing -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.9.0/jasmine.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.9.0/jasmine.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.9.0/jasmine-html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.9.0/boot.min.js"></script>
+    <script src="/static/calc-spec.js"></script>
+    <!-- end of stuff for testing -->
+    {% endif %}
+  </body>
+</html>
