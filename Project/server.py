@@ -7,11 +7,13 @@ import requests
 from model import connect_to_db, db
 import crud
 from jinja2 import StrictUndefined
+from newsapi import NewsApiClient
 
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
-API_KEY = os.environ['YAHOO_KEY']
+STOCKS_KEY = os.environ['YAHOO_KEY']
+NEWS_KEY = os.environ['NEWS_KEY']
 
 #remove in production
 app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
@@ -19,27 +21,40 @@ app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
 
 
 
-@app.route("/")
-def homepage():
-    """View homepage."""
+# @app.route("/")
+# def homepage():
+#     """View homepage."""
 
-    return render_template("homepage.html")
+#     return render_template("homepage.html")
 
 @app.route('/')
 def show_stock_data():
-    """Search for afterparties on Eventbrite"""
+    """Shows stock data"""
 
     # url = "https://yfapi.net/v6/finance/quote"
     #querystring = {"symbols":"AAPL"}
 
-    url = "https://yfapi.net/v1/finance/trending/US"
-    querystring = {"region":"US"}
+    quote_url = "https://yfapi.net/v6/finance/quote"
+    trending_url = "https://yfapi.net/v1/finance/trending/US"
 
-    headers = {'X-API-KEY': API_KEY}
 
-    data = requests.request("GET", url, headers=headers, params=querystring)
+    trend_query = {"region":"US"}
+    quote_query = {"symbols":"AAPL,MSFT,GOOGL,AMZN,FB"}
+
+    headers = {'X-API-KEY': STOCKS_KEY}
+
+    trends = requests.request("GET", trending_url, headers=headers, params=trend_query)
+    quotes = requests.request("GET", quote_url, headers=headers, params=quote_query)
+    trends_json = trends.json()
+    quotes_json = quotes.json()
+
     # data = requests.request("GET", url, headers=headers, params=querystring)
-    json_data = data.json()
+    newsapi = NewsApiClient(NEWS_KEY)
+    top_headlines = newsapi.get_everything(q='markets',
+                                          sources='bloomberg,the-verge, the-wall-street-journal',
+                                          from_param='2022-02-04',
+                                          to='2022-02-04',
+                                          language='en')
     # AAPL_quote = json_data['quoteResponse']['result'][0]
     # ticker = json_data['quoteResponse']['result'][0]['symbol']
     # stocks = data[symbol]
@@ -47,7 +62,9 @@ def show_stock_data():
 
     return render_template('base.html',
                            pformat=pformat,
-                           data=json_data
+                           quote_data=quotes_json,
+                           trend_data=trends_json,
+                           news_data=top_headlines
                            )
 
 # @app.route("/movies")
