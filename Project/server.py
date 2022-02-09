@@ -8,12 +8,15 @@ from model import connect_to_db, db
 import crud
 from jinja2 import StrictUndefined
 import http.client, urllib.parse
+from newsapi import NewsApiClient
 
 app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 STOCKS_KEY = os.environ['YAHOO_KEY']
 NEWS_KEY = os.environ['NEWS_KEY']
+NEWS_KEY2 = os.environ['NEWS_KEY2']
+
 
 #remove in production
 app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
@@ -48,37 +51,38 @@ def show_stock_data():
     trends_json = trends.json()
     quotes_json = quotes.json()
 
-    conn = http.client.HTTPSConnection('api.marketaux.com')
+    # conn = http.client.HTTPSConnection('api.marketaux.com')
 
-    params = urllib.parse.urlencode({
-        'api_token': 'Wchx8cSc4fNeIBe3lmfwzrmHhbgkMEHktH8w6pAm',
-        'symbols': 'AAPL,TSLA',
-        'limit': 3,
-        })
+    # params = urllib.parse.urlencode({
+    #     'api_token': NEWS_KEY2,
+    #     'symbols': 'AAPL,TSLA',
+    #     'limit': 3,
+    #     })
 
-    conn.request('GET', '/v1/news/all?{}'.format(params))
+    # conn.request('GET', '/v1/news/all?{}'.format(params))
 
-    res = conn.getresponse()
-    news = res.read()
-    print(type(news))
+    # res = conn.getresponse()
+    # news = res.read()
+    # print(type(news))
 
     # data = requests.request("GET", url, headers=headers, params=querystring)
-    # newsapi = NewsApiClient(NEWS_KEY)
-    # top_headlines = newsapi.get_everything(q='markets',
-    #                                       sources='bloomberg,the-verge, the-wall-street-journal',
-    #                                       from_param='2022-02-04',
-    #                                       to='2022-02-04',
-    #                                       language='en')
+    newsapi = NewsApiClient(NEWS_KEY)
+    top_headlines = newsapi.get_everything(sources='bloomberg,the-verge, the-wall-street-journal',
+                                          from_param='2022-02-04',
+                                          to='2022-02-04',
+                                          language='en')
+
+
     # AAPL_quote = json_data['quoteResponse']['result'][0]
     # ticker = json_data['quoteResponse']['result'][0]['symbol']
     # stocks = data[symbol]
-    #print(data.text)
+    # print(data.text)
 
     return render_template('base.html',
                            pformat=pformat,
                            quote_data=quotes_json,
                            trend_data=trends_json,
-                           news_data=news
+                           news_data=top_headlines
                            )
 
 # @app.route("/movies")
