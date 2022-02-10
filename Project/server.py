@@ -84,7 +84,7 @@ def show_stock_data():
                            )
 
 @app.route("/quote/<id>")
-def get_search_results(id):
+def get_stock_quote(id):
     """Show a stock quote data."""
     quote_url = "https://yfapi.net/v6/finance/quote"
     symbol = request.args.get("search")
@@ -92,13 +92,13 @@ def get_search_results(id):
     headers = {'X-API-KEY': STOCKS_KEY}
 
     quote = requests.request("GET", quote_url, headers=headers, params=quote_query)
-
+    quote_response = quote.json()
     # AAPL_quote = json_data['quoteResponse']['result'][0]
     # ticker = json_data['quoteResponse']['result'][0]['symbol']
     # stocks = data[symbol]
     # print(data.text)
 
-    return render_template("quote.html", movies=movies)
+    return render_template("quote.html", quote=quote)
 
 
 # @app.route("/movies/<movie_id>")
