@@ -7,9 +7,9 @@ idna==3.2
 itsdangerous==2.0.1
 Jinja2==3.0.1
 MarkupSafe==2.0.1
+newsapi-python
 pylint-flask-sqlalchemy==0.1.0
 pylint-flask==0.6
 requests==2.26.0
 urllib3==1.26.6
 Werkzeug==2.0.1
-newsapi-python

@@ -3,31 +3,24 @@
 <head>
   <title>{% block title %}{% endblock %}</title>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-  integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
 
-  <link rel="stylesheet" href="/static/css/party.css">
 </head>
 <body>
-  <div class="container-fluid d-flex header">
     <h1>
-      <a href="/">It&rsquo;s My Party!</a>
     </h1>
 
-    {% for msg in get_flashed_messages() %}
-      <div class="alert alert-info">{{ msg }}</div>
-    {% endfor %}
-  </div>
-
   {% block content %}
-  <div class="row">
-    <div class="col">
+<div>
+    <form action="/quote">
+        Search <input type="text" name="search">
+        <input type="submit">
+    </form>
+</div>
       <div id="results-as-json">
         <h2>Results as JSON</h2>
+        <pre>{{ pformat(news_data) }}</pre>
         <pre>{{ pformat(quote_data) }}</pre>
         <pre>{{ pformat(trend_data) }}</pre>
-        <pre>{{ pformat(news_data) }}</pre>
     </div>
    {% endblock %}
 </body>

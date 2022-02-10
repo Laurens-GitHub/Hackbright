@@ -67,16 +67,14 @@ def show_stock_data():
 
     # data = requests.request("GET", url, headers=headers, params=querystring)
     newsapi = NewsApiClient(NEWS_KEY)
-    top_headlines = newsapi.get_everything(sources='bloomberg,the-verge, the-wall-street-journal',
-                                          from_param='2022-02-04',
-                                          to='2022-02-04',
-                                          language='en')
+    top_headlines = newsapi.get_top_headlines(
+                                          category='business',
+                                          country='us',
+                                          language='en'
+                                                                                    )
 
 
-    # AAPL_quote = json_data['quoteResponse']['result'][0]
-    # ticker = json_data['quoteResponse']['result'][0]['symbol']
-    # stocks = data[symbol]
-    # print(data.text)
+
 
     return render_template('base.html',
                            pformat=pformat,
@@ -85,13 +83,22 @@ def show_stock_data():
                            news_data=top_headlines
                            )
 
-# @app.route("/movies")
-# def all_movies():
-#     """View all movies."""
+@app.route("/quote/<id>")
+def get_search_results(id):
+    """Show a stock quote data."""
+    quote_url = "https://yfapi.net/v6/finance/quote"
+    symbol = request.args.get("search")
+    quote_query = {"symbols": symbol }
+    headers = {'X-API-KEY': STOCKS_KEY}
 
-#     movies = crud.get_movies()
+    quote = requests.request("GET", quote_url, headers=headers, params=quote_query)
 
-#     return render_template("all_movies.html", movies=movies)
+    # AAPL_quote = json_data['quoteResponse']['result'][0]
+    # ticker = json_data['quoteResponse']['result'][0]['symbol']
+    # stocks = data[symbol]
+    # print(data.text)
+
+    return render_template("quote.html", movies=movies)
 
 
 # @app.route("/movies/<movie_id>")
