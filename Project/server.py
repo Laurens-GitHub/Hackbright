@@ -80,13 +80,12 @@ def show_stock_data():
                            pformat=pformat,
                            quote_data=quotes_json,
                            trend_data=trends_json,
-                           news_data=top_headlines
-                           )
+                           news_data=top_headlines)
 
-@app.route("/quote/<id>")
-def get_stock_quote(id):
+@app.route("/quote")
+def get_stock_quote():
     """Show a stock quote data."""
-    quote_url = "https://yfapi.net/v6/finance/quote"
+    quote_url = "https://yfapi.net/v6/finance/quote/"
     symbol = request.args.get("search")
     quote_query = {"symbols": symbol }
     headers = {'X-API-KEY': STOCKS_KEY}
@@ -98,8 +97,30 @@ def get_stock_quote(id):
     # stocks = data[symbol]
     # print(data.text)
 
-    return render_template("quote.html", quote=quote)
+    if quote_response == {'quoteResponse': {'error': None, 'result': []}}:
+        return redirect("/search")
 
+    else:
+        return render_template("quote.html",
+                                pformat=pformat,
+                                quote=quote_response)
+
+@app.route("/search")
+def show_search_results():
+    """Show stock search results"""
+
+    quote_url = "https://yfapi.net/v6/finance/autocomplete"
+    query = request.args.get("search")
+    quote_query = {"query": query,
+                    "lang": 'en' }
+    headers = {'X-API-KEY': STOCKS_KEY}
+
+    results = requests.request("GET", quote_url, headers=headers, params=quote_query)
+    results_json = results.json()
+
+    return render_template("search-results.html",
+                            pformat=pformat,
+                            search_results=results_json)
 
 # @app.route("/movies/<movie_id>")
 # def show_movie(movie_id):
