@@ -82,6 +82,8 @@ def show_stock_data():
                            trend_data=trends_json,
                            news_data=top_headlines)
 
+def log_in_user
+
 @app.route("/quote")
 def get_stock_quote():
     """Show a stock quote data."""
@@ -112,7 +114,7 @@ def get_stock_quote():
             flash("No results found, please search again!")
             return render_template("search-results.html",
                                 pformat=pformat,
-                                search_results="None")
+                                search_results="Nothing was found! Search again.")
         else:
             return render_template("search-results.html",
                                 pformat=pformat,
@@ -123,9 +125,6 @@ def get_stock_quote():
         return render_template("quote.html",
                                 pformat=pformat,
                                 quote=quote_response)
-
-    #TODO: handle the case where the search returns nothing.
-
 
 
 # @app.route("/search")
