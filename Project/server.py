@@ -98,29 +98,43 @@ def get_stock_quote():
     # print(data.text)
 
     if quote_response == {'quoteResponse': {'error': None, 'result': []}}:
-        return redirect("/search")
+        quote_url = "https://yfapi.net/v6/finance/autocomplete"
+        query = request.args.get("search")
+        quote_query = {"query": query,
+                        "lang": 'en' }
+        headers = {'X-API-KEY': STOCKS_KEY}
+
+        results = requests.request("GET", quote_url, headers=headers, params=quote_query)
+        results_json = results.json()
+
+        #handle the case where nothing is returned
+        if results_json['ResultSet']['Result'] == []:
+            flash("No results found, please search again!")
+            return render_template("search-results.html",
+                                pformat=pformat,
+                                search_results="None")
+        else:
+            return render_template("search-results.html",
+                                pformat=pformat,
+                                search_results=results_json)
+
 
     else:
         return render_template("quote.html",
                                 pformat=pformat,
                                 quote=quote_response)
 
-@app.route("/search")
-def show_search_results():
-    """Show stock search results"""
+    #TODO: handle the case where the search returns nothing.
 
-    quote_url = "https://yfapi.net/v6/finance/autocomplete"
-    query = request.args.get("search")
-    quote_query = {"query": query,
-                    "lang": 'en' }
-    headers = {'X-API-KEY': STOCKS_KEY}
 
-    results = requests.request("GET", quote_url, headers=headers, params=quote_query)
-    results_json = results.json()
 
-    return render_template("search-results.html",
-                            pformat=pformat,
-                            search_results=results_json)
+# @app.route("/search")
+# def show_search_results():
+#     """Show stock search results"""
+
+
+
+
 
 # @app.route("/movies/<movie_id>")
 # def show_movie(movie_id):
