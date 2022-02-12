@@ -3,7 +3,7 @@
 import os
 import json
 from random import choice
-from datetime import datetime
+import datetime
 
 import crud
 import model
@@ -12,16 +12,15 @@ import server
 os.system("dropdb market")
 os.system('createdb market')
 
-
 model.connect_to_db(server.app)
 model.db.create_all()
 
+today = datetime.datetime.now()
 
-# Load movie data from JSON file
+
+# Load stock data from txt file
 stock_data = open('data/Sample_stocks.txt')
 
-# Create movies, store them in list so we can use them
-# to create fake ratings later
 stocks_in_db = []
 for line in stock_data:
     line = line.rstrip()
@@ -31,17 +30,6 @@ for line in stock_data:
         data[0],
         data[1]
     )
-    # TODO: get the title, overview, and poster_path from the movie
-    # dictionary. Then, get the release_date and convert it to a
-    # datetime object with datetime.strptime
-    # title, overview, poster_path = (
-    #     movie["title"],
-    #     movie["overview"],
-    #     movie["poster_path"],
-    # )
-    # release_date = datetime.strptime(movie["release_date"], "%Y-%m-%d")
-
-
     db_stock = crud.create_stock(symbol, company)
     stocks_in_db.append(db_stock)
 
@@ -50,8 +38,8 @@ model.db.session.commit()
 
 
 for n in range(5):
-    first_name = f'John{n}'
-    last_name = f'Doe{n}'
+    first_name = f'John'
+    last_name = f'Doe {n}'
     email = f'user{n}@test.com'
     password = 'test'
 
@@ -62,7 +50,7 @@ for n in range(5):
     # save 10 stocks for the user
     for _ in range (10):
         random_stock = choice(stocks_in_db)
-        date_saved = datetime
+        date_saved = today.strftime("%m/%d/%y")
         user_stock = crud.create_user_stock(user, random_stock, date_saved)
         model.db.session.add(user_stock)
 

@@ -76,13 +76,11 @@ def show_stock_data():
 
 
 
-    return render_template('base.html',
+    return render_template('homepage.html',
                            pformat=pformat,
                            quote_data=quotes_json,
                            trend_data=trends_json,
                            news_data=top_headlines)
-
-def log_in_user
 
 @app.route("/quote")
 def get_stock_quote():
@@ -153,23 +151,23 @@ def get_stock_quote():
 #     return render_template("all_users.html", users=users)
 
 
-# @app.route("/users", methods=["POST"])
-# def register_user():
-#     """Create a new user."""
+@app.route("/users", methods=["POST"])
+def register_user():
+    """Create a new user."""
 
-#     email = request.form.get("email")
-#     password = request.form.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-#     user = crud.get_user_by_email(email)
-#     if user:
-#         flash("Cannot create an account with that email. Try again.")
-#     else:
-#         user = crud.create_user(email, password)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash("Account created! Please log in.")
+    user = crud.get_user_by_email(email)
+    if user:
+        flash("Cannot create an account with that email. Try again.")
+    else:
+        user = crud.create_user(email, password)
+        db.session.add(user)
+        db.session.commit()
+        flash("Account created! Please log in.")
 
-#     return redirect("/")
+    return redirect("/")
 
 
 # @app.route("/users/<user_id>")
@@ -181,22 +179,22 @@ def get_stock_quote():
 #     return render_template("user_details.html", user=user)
 
 
-# @app.route("/login", methods=["POST"])
-# def process_login():
-#     """Process user login."""
+@app.route("/login", methods=["POST"])
+def process_login():
+    """Process user login."""
 
-#     email = request.form.get("email")
-#     password = request.form.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-#     user = crud.get_user_by_email(email)
-#     if not user or user.password != password:
-#         flash("The email or password you entered was incorrect.")
-#     else:
-#         # Log in user by storing the user's email in session
-#         session["user_email"] = user.email
-#         flash(f"Welcome back, {user.email}!")
+    user = crud.get_user_by_email(email)
+    if not user or user.password != password:
+        flash("The email or password you entered was incorrect.")
+    else:
+        # Log in user by storing the user's email in session
+        session["user_email"] = user.email
+        flash(f"Welcome back, {user.email}!")
 
-#     return redirect("/")
+    return redirect("/")
 
 
 # @app.route("/movies/<movie_id>/ratings", methods=["POST"])
