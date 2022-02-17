@@ -23,12 +23,21 @@ app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
 
 
 
+# From anlu to Everyone 12:16 PM
+# # Write a yfapi.py module that would make the following code work, and then
+# # use this module in server.py in the appropriate places
+# from yfapi import YFAPIClient
 
-# @app.route("/")
-# def homepage():
-#     """View homepage."""
+# yf_client = YFAPIClient(STOCKS_KEY)
 
-#     return render_template("homepage.html")
+# # for getting quotes
+# quotes = yf_client.quotes(".INX,.DJI,NDAQ,AAPL,MSFT,GOOGL,AMZN,FB")
+
+# # for getting trends
+# trends = yf_client.trends()  # this can have a default region argument of "US"
+
+# # for getting autocomplete
+# quotes = yf_client.autocomplete("XXX")
 
 @app.route('/')
 def show_stock_data():
@@ -107,16 +116,10 @@ def get_stock_quote():
         results = requests.request("GET", quote_url, headers=headers, params=quote_query)
         results_json = results.json()
 
-        #handle the case where nothing is returned
-        if results_json['ResultSet']['Result'] == []:
-            flash("No results found, please search again!")
-            return render_template("search-results.html",
-                                pformat=pformat,
-                                search_results="Nothing was found! Search again.")
-        else:
-            return render_template("search-results.html",
-                                pformat=pformat,
-                                search_results=results_json)
+
+        return render_template("search-results.html",
+                            pformat=pformat,
+                            search_results=results_json)
 
 
     else:
@@ -155,6 +158,8 @@ def get_stock_quote():
 def register_user():
     """Create a new user."""
 
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -162,7 +167,7 @@ def register_user():
     if user:
         flash("Cannot create an account with that email. Try again.")
     else:
-        user = crud.create_user(email, password)
+        user = crud.create_user(first_name, last_name, email, password)
         db.session.add(user)
         db.session.commit()
         flash("Account created! Please log in.")
@@ -170,21 +175,21 @@ def register_user():
     return redirect("/")
 
 
-# @app.route("/users/<user_id>")
-# def show_user(user_id):
-#     """Show details on a particular user."""
+@app.route("/users/<user_id>")
+def show_user(user_id):
+    """Show details on a particular user."""
 
-#     user = crud.get_user_by_id(user_id)
+    user = crud.get_user_by_id(user_id)
 
-#     return render_template("user_details.html", user=user)
+    return render_template("user_stocks.html", user=user)
 
 
 @app.route("/login", methods=["POST"])
 def process_login():
     """Process user login."""
 
-    email = request.form.get("email")
-    password = request.form.get("password")
+    email = request.form.get("login-email")
+    password = request.form.get("login-pass")
 
     user = crud.get_user_by_email(email)
     if not user or user.password != password:
