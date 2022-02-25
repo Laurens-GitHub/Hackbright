@@ -41,6 +41,10 @@ app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
 # # for getting autocomplete
 # quotes = yf_client.autocomplete("XXX")
 
+#=======================================#
+##############   HOMEPAGE   #############
+#=======================================#
+
 @app.route('/')
 def show_stock_data():
     """Shows stock data"""
@@ -84,14 +88,16 @@ def show_stock_data():
                                           language='en'
                                                                                     )
 
-
-
-
     return render_template('homepage.html',
                            pformat=pformat,
                            quote_data=quotes_json,
                            trend_data=trends_json,
                            news_data=top_headlines)
+
+
+#=======================================#
+###############   QUOTES   ##############
+#=======================================#
 
 @app.route("/quote")
 def get_stock_quote():
@@ -103,10 +109,6 @@ def get_stock_quote():
 
     quote = requests.request("GET", quote_url, headers=headers, params=quote_query)
     quote_response = quote.json()
-    # AAPL_quote = json_data['quoteResponse']['result'][0]
-    # ticker = json_data['quoteResponse']['result'][0]['symbol']
-    # stocks = data[symbol]
-    # print(data.text)
 
     if quote_response == {'quoteResponse': {'error': None, 'result': []}}:
         quote_url = "https://yfapi.net/v6/finance/autocomplete"
@@ -116,45 +118,27 @@ def get_stock_quote():
         headers = {'X-API-KEY': STOCKS_KEY}
 
         results = requests.request("GET", quote_url, headers=headers, params=quote_query)
-        results_json = results.json()
-
+        search_results = results.json()
 
         return render_template("search-results.html",
-                            pformat=pformat,
-                            search_results=results_json)
-
+                            search_results=search_results, pformat=pformat,
+                            user_query=query)
 
     else:
+        symbol = quote_response['quoteResponse']['result'][0]['symbol']
+        company = quote_response['quoteResponse']['result'][0]['shortName']
+
         return render_template("quote.html",
-                                pformat=pformat,
-                                quote=quote_response)
+                                symbol=symbol,
+                                company=company
+                                # pformat=pformat,
+                                # results=quote_response
+                                )
 
 
-# @app.route("/search")
-# def show_search_results():
-#     """Show stock search results"""
-
-
-
-
-
-# @app.route("/movies/<movie_id>")
-# def show_movie(movie_id):
-#     """Show details on a particular movie."""
-
-#     movie = crud.get_movie_by_id(movie_id)
-
-#     return render_template("movie_details.html", movie=movie)
-
-
-# @app.route("/users")
-# def all_users():
-#     """View all users."""
-
-#     users = crud.get_users()
-
-#     return render_template("all_users.html", users=users)
-
+#=======================================#
+###############   USERS   ###############
+#=======================================#
 
 @app.route("/users", methods=["POST"])
 def register_user():
@@ -207,37 +191,40 @@ def process_login():
 
 
 @app.route("/favorites", methods=["POST"])
-def create_user_stock(stock_id):
+def create_user_stock():
     """Create a new saved stock for the user."""
 
     logged_in_email = session.get("user_email")
-    stock_id = stock_id
+    symbol = request.form.get("symbol")
+    company = request.form.get("company")
+    new_stock = crud.create_stock(symbol, company)
+    user = crud.get_user_by_email(logged_in_email)
+    date_saved = today.strftime("%m/%d/%y")
+    fav_stock = crud.create_user_stock(user, new_stock, date_saved)
+    check_stock = crud.get_stock_by_symbol(symbol)
 
-    if logged_in_email is None:
-        flash("You must log in to save a stock.")
-
-    else:
-#        create a stock using the quote info
-        symbol = requests.get_json(['quoteResponse']['result'][0]['symbol'])
-        #print(requests.get_json())
-        company = requests.get_json(['quoteResponse']['result'][0]['longName'])
-        stock = crud.create_stock(symbol, company)
-        db.session.add(stock)
+# TODO: fix these conditions
+#check if this stock is already in our database:
+    if check_stock.symbol != symbol:
+#if it isn't, create the stock using the quote info:
+        db.session.add(new_stock)
         db.session.commit()
-
-# create the user stock
-        user = crud.get_user_by_email(logged_in_email)
-        date_saved = today.strftime("%m/%d/%y")
-        fav_stock = crud.create_user_stock(user.user_id, stock.stock, date_saved)
+#and create the user stock:
         db.session.add(fav_stock)
         db.session.commit()
+        flash(f"You saved {company} to your favorites.")
+#if it is, just create the user stock:
+    elif check_stock:
+        db.session.add(fav_stock)
+        db.session.commit()
+        flash(f"You saved {company} to your favorites.")
 
-    return render_template()
+    else:
+        if logged_in_email is None:
+            flash("You must log in to save a stock.")
 
+    return redirect("/")
 
-#         flash(f"You rated this movie {rating_score} out of 5.")
-
-#     return redirect(f"/movies/{movie_id}")
 
 
 if __name__ == "__main__":
