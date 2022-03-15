@@ -1,7 +1,7 @@
 """Models for stock viewing app."""
 
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -41,14 +41,17 @@ class Stock(db.Model):
         return f"<Stock id={self.stock_id}, symbol={self.symbol}, company={self.company}>"
 
 
-class User_stock(db.Model):
+class UserStock(db.Model):
     """A stock saved by a user."""
 
     __tablename__ = "user_stocks"
 
+    __table_args__ = (
+    db.UniqueConstraint('user_id', 'stock_id', name='unique_user_stock'),)
+
     user_stock_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    stock_id = db.Column(db.Integer, db.ForeignKey("stocks.stock_id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    stock_id = db.Column(db.Integer, db.ForeignKey("stocks.stock_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     date_saved = db.Column(db.String)
 
     stock = db.relationship("Stock", backref="user_stocks")
@@ -62,6 +65,7 @@ class User_stock(db.Model):
 
 
 def connect_to_db(flask_app, db_uri="postgresql:///market", echo=True):
+    """Connects to the database"""
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     flask_app.config["SQLALCHEMY_ECHO"] = echo
     flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

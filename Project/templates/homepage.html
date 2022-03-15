@@ -15,9 +15,14 @@
       </p>
 
       <p>
-      <input type="submit">
+      <input type="submit" name="logout" value="Log In">
       </p>
   </form>
+
+  <form action="/logoff" method="POST">
+   <input type="submit" name="logout" value="Log Out">
+  </form>
+
   <h2>Create an Account</h2>
   <form action="/users" method="POST">
     <p>
@@ -38,10 +43,14 @@
       <input type="submit">
     </p>
 
+<div>
 
+</div>
 
     <div id="results-as-json">
         <h2>Results as JSON</h2>
+
+        <pre>{{ pformat(summary_data) }}</pre>
         <pre>{{ pformat(news_data) }}</pre>
         <pre>{{ pformat(quote_data) }}</pre>
         <pre>{{ pformat(trend_data) }}</pre>
