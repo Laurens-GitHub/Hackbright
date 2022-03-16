@@ -32,9 +32,9 @@ def show_stock_data():
     """Shows stock data"""
 
     summary_json = yfapi.get_market_summary()
+
     quote_url = "https://yfapi.net/v6/finance/quote"
     trending_url = "https://yfapi.net/v1/finance/trending/US"
-    import pdb; pdb.set_trace()
     trend_query = {"region":"US"}
     quote_query = {"symbols":".INX,NDAQ,AAPL,MSFT,GOOGL,AMZN,FB"}
     headers = {'X-API-KEY': STOCKS_KEY}
@@ -57,11 +57,17 @@ def show_stock_data():
                            summary_json=summary_json,
                            news_data=top_headlines)
 
-# @app.route('/market_summary.json')
-# def send_market_summary():
-#     """Sends major index data"""
+@app.route('/market_summary.json')
+def send_market_summary():
+    """Sends major index data"""
 
+    summary_url = "https://yfapi.net/v6/finance/quote/marketSummary"
+    summary_query = {"lang":"en", "region":"US"}
+    headers = {'X-API-KEY': STOCKS_KEY}
+    summary = requests.request("GET", summary_url, headers=headers, params=summary_query)
+    summary_json = summary.json()
 
+    return summary_json
 
 #=======================================#
 ###############   QUOTES   ##############
