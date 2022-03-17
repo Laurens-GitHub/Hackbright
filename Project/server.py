@@ -31,7 +31,6 @@ app.config['PRESERVE_CONTEXT_ON_EXCEPTION'] = True
 def show_stock_data():
     """Shows stock data"""
 
-    summary_json = yfapi.get_market_summary()
 
     quote_url = "https://yfapi.net/v6/finance/quote"
     trending_url = "https://yfapi.net/v1/finance/trending/US"
@@ -54,18 +53,14 @@ def show_stock_data():
                            pformat=pformat,
                            quote_data=quotes_json,
                            trend_data=trends_json,
-                           summary_json=summary_json,
+                        #    summary_json=summary_json,
                            news_data=top_headlines)
 
 @app.route('/market_summary.json')
 def send_market_summary():
     """Sends major index data"""
 
-    summary_url = "https://yfapi.net/v6/finance/quote/marketSummary"
-    summary_query = {"lang":"en", "region":"US"}
-    headers = {'X-API-KEY': STOCKS_KEY}
-    summary = requests.request("GET", summary_url, headers=headers, params=summary_query)
-    summary_json = summary.json()
+    summary_json = yfapi.get_market_summary()
 
     return summary_json
 
@@ -185,13 +180,13 @@ def get_stock_quote():
             year_high = format(quote_response['quoteResponse']['result'][0]['fiftyTwoWeekHigh'], ".2f")
             year_low = format(quote_response['quoteResponse']['result'][0]['fiftyTwoWeekLow'], ".2f")
 #TODO: see if you can fix not getting the price/equity ratio & eps
-            pe_ratio = format(quote_response['quoteResponse']['result'][0]['trailingPE'], ".2f")
-            eps = format(quote_response['quoteResponse']['result'][0]['epsTrailingTwelveMonths'], ".2f")
-            volume = rapid_response['price']['regularMarketVolume']['fmt']
-            market_cap = rapid_response['price']['marketCap']['fmt']
-            expense_ratio = rapid_response['fundProfile']['feesExpensesInvestment']['annualReportExpenseRatio']['fmt']
-            turnover = rapid_response['fundProfile']['feesExpensesInvestment']['annualHoldingsTurnover']['fmt']
-            fund_style = rapid_response['fundProfile']['categoryName']
+            pe_ratio = (quote_response['quoteResponse']['result'][0].get('trailingPE'))
+            eps = quote_response['quoteResponse']['result'][0].get('epsTrailingTwelveMonths')
+            volume = rapid_response['price'].get('regularMarketVolume')
+            market_cap = rapid_response['price'].get('marketCap')
+            expense_ratio = rapid_response['fundProfile']['feesExpensesInvestment'].get('annualReportExpenseRatio')
+            turnover = rapid_response['fundProfile']['feesExpensesInvestment'].get('annualHoldingsTurnover')
+            fund_style = rapid_response['fundProfile'].get('categoryName')
             return render_template("ETF.html",
                                     symbol=symbol,
                                     company=company,
@@ -214,7 +209,7 @@ def get_stock_quote():
                                     turnover=turnover,
                                     fund_style=fund_style,
                                     pformat=pformat,
-                                    ETF_json=quote_response)
+                                    ETF_json=quote_response, rapid_json=rapid_response)
 
         elif quote_type == "INDEX":
             symbol = quote_response['quoteResponse']['result'][0]['symbol']
