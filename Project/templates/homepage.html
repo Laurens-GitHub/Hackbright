@@ -17,26 +17,32 @@
     </div>
 
 
-    <!-- Trending Tickers -->
-<div>
     <div class="row">
-        <div class="card col-6 g-5">
-            <h5 class="card-title text-center">Trending</h5>
-            <div class="card-body">
-                <ul class="list-group list-group-numbered" id="trending"></ul>
+        <!-- Big Tech -->
+        <div class="col-sm-6">
+            <div class="card" style="height: 28rem">
+                <h4 class="card-title text-center bg-info" style="height: 2.5rem">Major Tech</h4>
+                    <div class="card-body vstack" id="big-tech">
+
+                    </div>
             </div>
         </div>
 
-    <!-- Big Tech -->
-        <div class="card col-6 g-5">
-            <h5 class="card-title text-center">Major Tech</h5>
-                <div class="card-body vstack" id="big-tech">
-
+        <!-- Trending Tickers -->
+        <div class="col-sm-4 trending">
+            <div class="card" style="height: 23rem">
+                <h4 class="card-title text-center bg-info" style="height: 2.5rem">Trending</h4>
+                <div class="card-body">
+                    <strong>
+                        <ul class="list-group list-group-numbered" id="trending"></ul>
+                    </strong>
                 </div>
+            </div>
         </div>
     </div>
-</div>
 
+
+<p></p>
 
     <h3 class="text-center">Top Stories</h3>
 
@@ -48,10 +54,10 @@
 
     <script>
         window.onload = (event) =>  {
-        // getSummary();
-        //     getTrending();
-        //     getBigTech();
-        //     getNews();
+            getSummary();
+            getTrending();
+            getBigTech();
+            getNews();
         };
     </script>
     {% endblock %}
